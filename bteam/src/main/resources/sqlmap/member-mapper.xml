@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me">
+
+<!-- 신규고객정보 삽입저장 -->
+<insert id='insert'>
+insert into member(id, pw, name,  phone, address, profile)
+values (#{id}, #{pw}, #{name}, #{phone}, #{address},#{profile})
+</insert>
+
+<!-- 해당고객정보 수정저장 -->
+<update id='update'>
+update member
+set id = #{id}, pw = #{pw}, name = #{name}, phone = #{phone}, address = #{address}, profile = #{profile}
+where id = #{id}
+</update>
+
+<!-- 해당회원정보 삭제 -->
+<delete id='delete'>
+delete from member where id = #{id}
+</delete>
+
+<!-- 해당회원정보조회 -->
+<select id='info' resultType='member.MemberVO'>
+select * from member where id = #{id}
+</select>
+
+<!-- 회원목록조회 -->
+<select id='list' resultType='member.MemberVO'>
+select * from member order by name
+</select>
+
+</mapper>  
