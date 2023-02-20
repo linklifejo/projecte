@@ -98,9 +98,6 @@ public class MemberController {
 		return "member/list";
 	}
 	
-	
-
-	
 	@RequestMapping("/anJoin" )
 	public String anJoin(HttpServletRequest req,MultipartRequest mReq, Model model) {
 		
@@ -154,57 +151,28 @@ public class MemberController {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("id", id);
 		map.put("pw", pw);
-		
-//		MemberVO vo = service.member_info(id);
-//		String mid = vo.getId();
-//		String mpw = vo.getPw();
+
 		MemberVO list = service.member_info(map);
 		
 		if( list != null ) {
-			//return "home"; //화면연결 forward
-			//return "redirect:/"; //화면연결 redirect
-//			List<MemberVO> list = service.member_list();			
-//			model.addAttribute("list", list);
+			
 			Gson gson = new Gson();
 			return gson.toJson( (MemberVO)list );
-//			return "member/anLists";
+			
 		}else {
-			//return "member/login"; //화면연결 forward
-			//return "redirect:login"; //화면연결 redirect
-//			model.addAttribute("re", "아이디 또는 페스워드 확인"); 
+			
 			return "아이디 또는 페스워드 확인";
-//			return "member/anReturn";
 			
 		}		
- 
-		
-//		if( id.equals(mid) && pw.equals(mpw) ) {
-//			//return "home"; //화면연결 forward
-//			//return "redirect:/"; //화면연결 redirect
-////			List<MemberVO> list = service.member_list();
-//			MemberVO list = service.member_info(vo);
-//			model.addAttribute("list", list);	
-//			return "member/anLists";
-//		}else {
-//			//return "member/login"; //화면연결 forward
-//			//return "redirect:login"; //화면연결 redirect
-//			model.addAttribute("re", "아이디 또는 페스워드 확인"); 
-//			return "member/anReturn";
-//		}		
-		
 		
 	}	
 	
 	@ResponseBody @RequestMapping(value="/selectMembers", produces="text/plain; charset=utf-8" )
 	public String selectMembers(HttpServletRequest req, Model model) {
 		
-//		String id = (String) req.getParameter("id");		
-//		System.out.println("id : " + id );
 		ArrayList<MemberVO> list = (ArrayList<MemberVO>)service.member_list();
-		
-		//model.addAttribute("list", list);
 		Gson gson = new Gson();
-		return gson.toJson( (ArrayList<MemberVO>)list );		
+		return gson.toJson( list );		
 		
 	}	
 	
@@ -212,12 +180,11 @@ public class MemberController {
 	public String deleteMember(HttpServletRequest req, Model model) {
 	
 		String id = (String) req.getParameter("id");		
-		//System.out.println("id : " + id );
 		service.member_delete(id);
 		
 		ArrayList<MemberVO> list = (ArrayList<MemberVO>)service.member_list();
 		Gson gson = new Gson();
-		return gson.toJson( (ArrayList<MemberVO>)list );		
+		return gson.toJson( list );		
 	}	
 
 		
