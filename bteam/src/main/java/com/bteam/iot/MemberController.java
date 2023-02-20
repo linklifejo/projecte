@@ -2,7 +2,9 @@ package com.bteam.iot;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
+import com.google.gson.Gson;
+
 import member.MemberServiceImpl;
 import member.MemberVO;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 @Controller
 public class MemberController {
 	@Autowired private MemberServiceImpl service;
@@ -142,58 +145,79 @@ public class MemberController {
 	
 
 	
-	@RequestMapping("/anLogin" )
+	@ResponseBody @RequestMapping(value="/anLogin", produces="text/plain; charset=utf-8" )
 	public String anLogin(HttpServletRequest req, Model model) {
 
 		String id = (String) req.getParameter("id");
 		String pw = (String) req.getParameter("pw");
 		System.out.println("id : " + id + ", pw : " + pw);
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", id);
+		map.put("pw", pw);
 		
+//		MemberVO vo = service.member_info(id);
+//		String mid = vo.getId();
+//		String mpw = vo.getPw();
+		MemberVO list = service.member_info(map);
 		
-		MemberVO vo = service.member_info(id);
-		String mid = vo.getId();
-		String mpw = vo.getPw();
-		
-	//	model.addAttribute("vo", vo); 
-		
-		if( id.equals(mid) && pw.equals(mpw) ) {
+		if( list != null ) {
 			//return "home"; //화면연결 forward
 			//return "redirect:/"; //화면연결 redirect
-			List<MemberVO> list = service.member_list();
-			model.addAttribute("list", list);	
-			return "member/anLists";
+//			List<MemberVO> list = service.member_list();			
+//			model.addAttribute("list", list);
+			Gson gson = new Gson();
+			return gson.toJson( (MemberVO)list );
+//			return "member/anLists";
 		}else {
 			//return "member/login"; //화면연결 forward
 			//return "redirect:login"; //화면연결 redirect
-			model.addAttribute("re", "아이디 또는 페스워드 확인"); 
-			return "member/anReturn";
+//			model.addAttribute("re", "아이디 또는 페스워드 확인"); 
+			return "아이디 또는 페스워드 확인";
+//			return "member/anReturn";
+			
 		}		
+ 
+		
+//		if( id.equals(mid) && pw.equals(mpw) ) {
+//			//return "home"; //화면연결 forward
+//			//return "redirect:/"; //화면연결 redirect
+////			List<MemberVO> list = service.member_list();
+//			MemberVO list = service.member_info(vo);
+//			model.addAttribute("list", list);	
+//			return "member/anLists";
+//		}else {
+//			//return "member/login"; //화면연결 forward
+//			//return "redirect:login"; //화면연결 redirect
+//			model.addAttribute("re", "아이디 또는 페스워드 확인"); 
+//			return "member/anReturn";
+//		}		
 		
 		
 	}	
 	
-	@RequestMapping("/selectMembers" )
+	@ResponseBody @RequestMapping(value="/selectMembers", produces="text/plain; charset=utf-8" )
 	public String selectMembers(HttpServletRequest req, Model model) {
 		
-		String id = (String) req.getParameter("id");		
-		System.out.println("id : " + id );
-		List<MemberVO> list = service.member_list();
+//		String id = (String) req.getParameter("id");		
+//		System.out.println("id : " + id );
+		ArrayList<MemberVO> list = (ArrayList<MemberVO>)service.member_list();
 		
-		model.addAttribute("list", list);
-			
-		return "member/anLists";
+		//model.addAttribute("list", list);
+		Gson gson = new Gson();
+		return gson.toJson( (ArrayList<MemberVO>)list );		
+		
 	}	
 	
-	@RequestMapping("/deleteMember" )
+	@ResponseBody @RequestMapping(value="/deleteMember", produces="text/plain; charset=utf-8" )
 	public String deleteMember(HttpServletRequest req, Model model) {
 	
 		String id = (String) req.getParameter("id");		
-		System.out.println("id : " + id );
+		//System.out.println("id : " + id );
 		service.member_delete(id);
-		List<MemberVO> list = service.member_list();
-		model.addAttribute("list", list);
 		
-		return "member/anLists";
+		ArrayList<MemberVO> list = (ArrayList<MemberVO>)service.member_list();
+		Gson gson = new Gson();
+		return gson.toJson( (ArrayList<MemberVO>)list );		
 	}	
 
 		

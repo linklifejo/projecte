@@ -1,5 +1,6 @@
 package member;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -34,6 +35,12 @@ public class MemberDAO implements MemberService {
 	@Override
 	public int member_delete(String id) {
 		return sql.delete("me.delete", id);
+	}
+
+	@Override
+	public MemberVO member_info(HashMap<String, String> vo) {
+		// TODO Auto-generated method stub
+		return sql.selectOne("me.myinfo", vo);
 	}
 
 }
